@@ -6,17 +6,20 @@
 #include "../src/roman_calculator.h"
 
 START_TEST(addition_function_accepts_two_strings)
-    add_roman_numerals("I", "I");
+    char *sum = add_roman_numerals("I", "I");
+    free(sum);
 END_TEST
 
 START_TEST(sum_of_I_and_I_is_II)
     char *sum = add_roman_numerals("I", "I");
     ck_assert_str_eq(sum, "II");
+    free(sum);
 END_TEST
 
 START_TEST(sum_of_II_and_I_is_III)
     char *sum = add_roman_numerals("II", "I");
     ck_assert_str_eq(sum, "III");
+    free(sum);
 END_TEST
 
 Suite *create_calculator_test_suite(void)
