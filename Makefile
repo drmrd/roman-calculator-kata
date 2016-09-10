@@ -23,4 +23,4 @@ check: all
 
 clean:
 	rm -rf build/
-	rm tests/check_roman_calculator.o
+	rm -f tests/check_roman_calculator.o
