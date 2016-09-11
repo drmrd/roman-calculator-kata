@@ -28,6 +28,12 @@ START_TEST(sum_of_V_and_V_is_X)
     free(sum);
 END_TEST
 
+START_TEST(sum_of_III_and_II_is_V)
+    char *sum = add_roman_numerals("III", "II");
+    ck_assert_str_eq(sum, "V");
+    free(sum);
+END_TEST
+
 Suite *create_calculator_test_suite(void)
 {
     Suite *test_suite = suite_create("Roman_Calculator");
@@ -38,6 +44,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_I_and_I_is_II);
     tcase_add_test(addition_test_case, sum_of_II_and_I_is_III);
     tcase_add_test(addition_test_case, sum_of_V_and_V_is_X);
+    tcase_add_test(addition_test_case, sum_of_III_and_II_is_V);
 
     suite_add_tcase(test_suite, addition_test_case);
 
