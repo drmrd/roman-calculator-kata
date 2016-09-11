@@ -4,8 +4,10 @@
 #include <string.h>
 
 static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
+
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **symbol_counts_ptr);
+static void compute_carryovers(int **symbol_counts_ptr);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
@@ -14,21 +16,11 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
     count_occurrences_of_chars_IVXLCDM(summand1, &character_counts);
     count_occurrences_of_chars_IVXLCDM(summand2, &character_counts);
 
-    /* Compute carry-overs */
-    int i = 0;
-    int next_symbol_conversion = 0;
-    int remainder = 0;
-    int quotient = 0;
-    for (i = 0; i < 6; i++) {
-        next_symbol_conversion = (i % 2 == 0) ? 5 : 2;
-        remainder = character_counts[i] % next_symbol_conversion;
-        quotient = character_counts[i] / next_symbol_conversion;
-        character_counts[i] = remainder;
-        character_counts[i + 1] += quotient;
-    }
+    compute_carryovers(&character_counts);
 
     char *sum = calloc(strlen(summand1) + strlen(summand2) + 1, sizeof(char));
 
+    int i;
     int offset = 0;
     for (i = 6; i > -1; i--) {
         memset(sum + offset, roman_characters[i], character_counts[i]);
@@ -40,8 +32,8 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 }
 
 /**
- * Count occurrences of the characters I, V, X, L, C, D, and M in the
- * input and add them to the array pointed to by digit_counts_ptr.
+ * Count occurrences of the characters I, V, X, L, C, D, and M in the input and
+ * add them to the array pointed to by digit_counts_ptr.
  */
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **character_counts_ptr) {
@@ -52,5 +44,29 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                 (*character_counts_ptr)[j]++;
             }
         }
+    }
+}
+
+/**
+ * Compute "carryovers", replacing multiple copies of a Roman digit with the
+ * next largest one.
+ */
+static void compute_carryovers(int **character_counts_ptr) {
+    /* The index of the current character in roman_characters */
+    int i;
+    /* The value of the next largest character in terms of the current one */
+    int value_of_next_largest_char = 0;
+    int quotient = 0;
+
+    for (i = 0; i < 6; i++) {
+        /* Five copies of I, X, or C should be converted to a single V, L, or D,
+         * while two copies of V, L, or D should be converted to X, C, or M. */
+        value_of_next_largest_char = (i % 2 == 0) ? 5 : 2;
+
+        quotient = (*character_counts_ptr)[i] / value_of_next_largest_char;
+        (*character_counts_ptr)[i] = (*character_counts_ptr)[i]
+            % value_of_next_largest_char;
+
+        (*character_counts_ptr)[i + 1] += quotient;
     }
 }
