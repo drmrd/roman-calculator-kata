@@ -8,6 +8,7 @@ static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **symbol_counts_ptr);
 static void compute_carryovers(int **symbol_counts_ptr);
+static char *character_counts_to_roman_numeral(const int *character_counts);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
@@ -18,14 +19,7 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 
     compute_carryovers(&character_counts);
 
-    char *sum = calloc(strlen(summand1) + strlen(summand2) + 1, sizeof(char));
-
-    int i;
-    int offset = 0;
-    for (i = 6; i > -1; i--) {
-        memset(sum + offset, roman_characters[i], character_counts[i]);
-        offset += character_counts[i];
-    }
+    char *sum = character_counts_to_roman_numeral(character_counts);
 
     free(character_counts);
     return sum;
@@ -69,4 +63,27 @@ static void compute_carryovers(int **character_counts_ptr) {
 
         (*character_counts_ptr)[i + 1] += quotient;
     }
+}
+
+/**
+ * Creates a string representation of a Roman numeral with the number of
+ * repetitions of the Roman digits appearing in the string specified by the
+ * passed character_counts array.
+ */
+static char *character_counts_to_roman_numeral(const int *character_counts) {
+    int numeral_length = 1;
+    int i;
+    for (i = 0; i < 7; i++) {
+        numeral_length += character_counts[i];
+    }
+
+    char *roman_numeral = calloc(numeral_length, sizeof(char));
+
+    int offset = 0;
+    for (i = 0; i < 7; i++) {
+        memset(roman_numeral + offset, roman_characters[i], character_counts[i]);
+        offset += character_counts[i];
+    }
+
+    return roman_numeral;
 }
