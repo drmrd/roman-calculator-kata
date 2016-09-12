@@ -9,6 +9,7 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **symbol_counts_ptr);
 static void compute_carryovers(int **symbol_counts_ptr);
 static char *character_counts_to_roman_numeral(const int *character_counts);
+static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
@@ -18,6 +19,7 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
     count_occurrences_of_chars_IVXLCDM(summand2, &character_counts);
 
     compute_carryovers(&character_counts);
+    flag_where_subtractive_forms_are_needed(&character_counts);
 
     char *sum = character_counts_to_roman_numeral(character_counts);
 
@@ -63,11 +65,20 @@ static void compute_carryovers(int **character_counts_ptr) {
 
         (*character_counts_ptr)[i + 1] += quotient;
     }
+}
 
-    for (i = 0; i < 3; i++) {
-        if ((*character_counts_ptr)[2 * i + 1] == 1 && (*character_counts_ptr)[2 * i] == 4) {
-            (*character_counts_ptr)[2 * i] = 9;
-            (*character_counts_ptr)[2 * i + 1] = 0;
+/**
+ * Indicate a subtractive form is needed to print the Roman numeral with the
+ * passed character counts. This is accomplished by replacing character counts
+ * indicating one 'D' followed by four 'C' chars with zero 'D' followed by nine
+ * 'C' (similar for 'L' and 'X' as well as 'V' and 'I').
+ */
+static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) {
+    int i;
+    for (i = 0; i < 6; i += 2) {
+        if ((*character_counts_ptr)[i + 1] == 1 && (*character_counts_ptr)[i] == 4) {
+            (*character_counts_ptr)[i] = 9;
+            (*character_counts_ptr)[i + 1] = 0;
         }
     }
 }
