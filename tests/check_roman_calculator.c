@@ -20,12 +20,13 @@ START_TEST(sum_of_II_and_I_is_III)
     assert_sum_equals("II", "I", "III");
 END_TEST
 
-START_TEST(sum_of_V_and_V_is_X)
-    assert_sum_equals("V", "V", "X");
-END_TEST
-
-START_TEST(sum_of_III_and_II_is_V)
+START_TEST(can_carryover_from_a_numeral_to_the_next_greatest_when_adding)
     assert_sum_equals("III", "II", "V");
+    assert_sum_equals("V", "V", "X");
+    assert_sum_equals("XXX", "XX", "L");
+    assert_sum_equals("L", "L", "C");
+    assert_sum_equals("CCC", "CC", "D");
+    assert_sum_equals("D", "D", "M");
 END_TEST
 
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
@@ -43,9 +44,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, addition_function_accepts_two_strings);
     tcase_add_test(addition_test_case, sum_of_I_and_I_is_II);
     tcase_add_test(addition_test_case, sum_of_II_and_I_is_III);
-    tcase_add_test(addition_test_case, sum_of_V_and_V_is_X);
-    tcase_add_test(addition_test_case, sum_of_III_and_II_is_V);
-    tcase_add_test(addition_test_case, can_sum_and_carryover);
+    tcase_add_test(addition_test_case, can_carryover_from_a_numeral_to_the_next_greatest_when_adding);
 
     suite_add_tcase(test_suite, addition_test_case);
 
