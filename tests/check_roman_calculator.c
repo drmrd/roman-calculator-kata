@@ -5,34 +5,34 @@
 #include <check.h>
 #include "../src/roman_calculator.h"
 
+static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum);
+
 START_TEST(addition_function_accepts_two_strings)
     char *sum = add_roman_numerals("I", "I");
     free(sum);
 END_TEST
 
 START_TEST(sum_of_I_and_I_is_II)
-    char *sum = add_roman_numerals("I", "I");
-    ck_assert_str_eq(sum, "II");
-    free(sum);
+    assert_sum_equals("I", "I", "II");
 END_TEST
 
 START_TEST(sum_of_II_and_I_is_III)
-    char *sum = add_roman_numerals("II", "I");
-    ck_assert_str_eq(sum, "III");
-    free(sum);
+    assert_sum_equals("II", "I", "III");
 END_TEST
 
 START_TEST(sum_of_V_and_V_is_X)
-    char *sum = add_roman_numerals("V", "V");
-    ck_assert_str_eq(sum, "X");
-    free(sum);
+    assert_sum_equals("V", "V", "X");
 END_TEST
 
 START_TEST(sum_of_III_and_II_is_V)
-    char *sum = add_roman_numerals("III", "II");
-    ck_assert_str_eq(sum, "V");
-    free(sum);
+    assert_sum_equals("III", "II", "V");
 END_TEST
+
+static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
+     char *sum = add_roman_numerals(summand1, summand2);
+     ck_assert_str_eq(sum, expected_sum);
+     free(sum);
+}
 
 Suite *create_calculator_test_suite(void)
 {
@@ -45,6 +45,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_II_and_I_is_III);
     tcase_add_test(addition_test_case, sum_of_V_and_V_is_X);
     tcase_add_test(addition_test_case, sum_of_III_and_II_is_V);
+    tcase_add_test(addition_test_case, can_sum_and_carryover);
 
     suite_add_tcase(test_suite, addition_test_case);
 
