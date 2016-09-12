@@ -29,6 +29,10 @@ START_TEST(can_carryover_from_a_numeral_to_the_next_greatest_when_adding)
     assert_sum_equals("D", "D", "M");
 END_TEST
 
+START_TEST(sum_of_II_and_II_is_IV)
+    assert_sum_equals("II", "II", "IV");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
@@ -45,6 +49,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_I_and_I_is_II);
     tcase_add_test(addition_test_case, sum_of_II_and_I_is_III);
     tcase_add_test(addition_test_case, can_carryover_from_a_numeral_to_the_next_greatest_when_adding);
+    tcase_add_test(addition_test_case, sum_of_II_and_II_is_IV);
 
     suite_add_tcase(test_suite, addition_test_case);
 
