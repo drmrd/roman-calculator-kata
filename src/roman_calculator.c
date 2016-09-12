@@ -63,6 +63,13 @@ static void compute_carryovers(int **character_counts_ptr) {
 
         (*character_counts_ptr)[i + 1] += quotient;
     }
+
+    for (i = 0; i < 3; i++) {
+        if ((*character_counts_ptr)[2 * i + 1] == 1 && (*character_counts_ptr)[2 * i] == 4) {
+            (*character_counts_ptr)[2 * i] = 9;
+            (*character_counts_ptr)[2 * i + 1] = 0;
+        }
+    }
 }
 
 /**
@@ -80,13 +87,16 @@ static char *character_counts_to_roman_numeral(const int *character_counts) {
     char *roman_numeral = calloc(numeral_length, sizeof(char));
 
     char *current_position = roman_numeral;
+    int current_character_count;
     for (i = 6; i > -1; i--) {
-        if (i < 6 && character_counts[i] == 4) {
-            *current_position++ = roman_characters[i];
-            *current_position++ = roman_characters[i + 1];
+        current_character_count = character_counts[i];
+
+        if (i == 6 || current_character_count < 4) {
+            memset(current_position, roman_characters[i], current_character_count);
+            current_position += current_character_count;
         } else {
-            memset(current_position, roman_characters[i], character_counts[i]);
-            current_position += character_counts[i];
+            *current_position++ = roman_characters[i];
+            *current_position++ = roman_characters[i + 1 + (current_character_count % 2)];
         }
     }
 
