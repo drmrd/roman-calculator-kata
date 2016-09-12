@@ -80,16 +80,14 @@ static char *character_counts_to_roman_numeral(const int *character_counts) {
     char *roman_numeral = calloc(numeral_length, sizeof(char));
 
     int offset = 0;
-    for (i = 6; i > 0; i--) {
-        memset(roman_numeral + offset, roman_characters[i], character_counts[i]);
-        offset += character_counts[i];
-    }
-
-    if (character_counts[0] == 4) {
-        roman_numeral[offset++] = 'I';
-        roman_numeral[offset++] = 'V';
-    } else {
-        memset(roman_numeral + offset, 'I', character_counts[0]);
+    for (i = 6; i > -1; i--) {
+        if (i < 6 && character_counts[i] == 4) {
+            roman_numeral[offset++] = roman_characters[i];
+            roman_numeral[offset++] = roman_characters[i + 1];
+        } else {
+            memset(roman_numeral + offset, roman_characters[i], character_counts[i]);
+            offset += character_counts[i];
+        }
     }
 
     return roman_numeral;
