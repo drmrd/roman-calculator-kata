@@ -79,14 +79,14 @@ static char *character_counts_to_roman_numeral(const int *character_counts) {
 
     char *roman_numeral = calloc(numeral_length, sizeof(char));
 
-    int offset = 0;
+    char *current_position = roman_numeral;
     for (i = 6; i > -1; i--) {
         if (i < 6 && character_counts[i] == 4) {
-            roman_numeral[offset++] = roman_characters[i];
-            roman_numeral[offset++] = roman_characters[i + 1];
+            *current_position++ = roman_characters[i];
+            *current_position++ = roman_characters[i + 1];
         } else {
-            memset(roman_numeral + offset, roman_characters[i], character_counts[i]);
-            offset += character_counts[i];
+            memset(current_position, roman_characters[i], character_counts[i]);
+            current_position += character_counts[i];
         }
     }
 
