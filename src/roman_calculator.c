@@ -92,25 +92,25 @@ static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) 
  */
 static char *character_counts_to_string(const int *character_counts) {
 
-    char *roman_numeral = calloc(array_sum(character_counts) + 1, sizeof(char));
+    char *result = calloc(array_sum(character_counts) + 1, sizeof(char));
+    char *current_position = result;
 
-    char *current_position = roman_numeral;
     int current_character_count;
 
-    int i;
-    for (i = 6; i > -1; i--) {
-        current_character_count = character_counts[i];
+    roman_character_index index = RCI_M;
+    for (index = RCI_M; index < RCI_END; index--) {
+        current_character_count = character_counts[index];
 
-        if (i == 6 || current_character_count < 4) {
-            memset(current_position, roman_characters[i], current_character_count);
+        if (index == RCI_M || current_character_count < 4) {
+            memset(current_position, roman_characters[index], current_character_count);
             current_position += current_character_count;
         } else {
-            *current_position++ = roman_characters[i];
-            *current_position++ = roman_characters[i + 1 + (current_character_count % 2)];
+            *current_position++ = roman_characters[index];
+            *current_position++ = roman_characters[(int) index + 1 + (current_character_count % 2)];
         }
     }
 
-    return roman_numeral;
+    return result;
 }
 
 static int array_sum(const int *array) {
