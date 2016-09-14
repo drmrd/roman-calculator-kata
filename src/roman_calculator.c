@@ -8,6 +8,7 @@ typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_ch
 
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral, int **symbol_counts_ptr);
 static void compute_carryovers(int **symbol_counts_ptr);
+static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index);
 static char *character_counts_to_string(const int *character_counts);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
 static int array_sum(const int *array);
@@ -45,28 +46,30 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
     }
 }
 
-/**
- * Compute "carryovers", replacing multiple copies of a Roman digit with the
- * next largest one.
- */
+/** Replaces multiple copies of a Roman digit with the next largest one. */
 static void compute_carryovers(int **character_counts_ptr) {
-    /* The index of the current character in roman_characters */
-    int i;
+    roman_character_index index;
+
     /* The value of the next largest character in terms of the current one */
     int value_of_next_largest_char = 0;
     int quotient = 0;
 
-    for (i = 0; i < 6; i++) {
-        /* Five copies of I, X, or C should be converted to a single V, L, or D,
-         * while two copies of V, L, or D should be converted to X, C, or M. */
-        value_of_next_largest_char = (i % 2 == 0) ? 5 : 2;
+    for (index = RCI_I; index < RCI_END; index++) {
+        value_of_next_largest_char = value_of_next_numeral_in_terms_of_numeral_at(index);
 
-        quotient = (*character_counts_ptr)[i] / value_of_next_largest_char;
-        (*character_counts_ptr)[i] = (*character_counts_ptr)[i]
+        quotient = (*character_counts_ptr)[index]
+            / value_of_next_largest_char;
+        (*character_counts_ptr)[index] = (*character_counts_ptr)[index]
             % value_of_next_largest_char;
 
-        (*character_counts_ptr)[i + 1] += quotient;
+        (*character_counts_ptr)[index + 1] += quotient;
     }
+}
+
+static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index) {
+    /* Five copies of I, X, or C should be converted to a single V, L, or D,
+     * while two copies of V, L, or D should be converted to X, C, or M. */
+    return (current_index % 2 == 0) ? 5 : 2;
 }
 
 /**
