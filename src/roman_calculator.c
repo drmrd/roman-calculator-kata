@@ -50,17 +50,14 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
 static void compute_carryovers(int **character_counts_ptr) {
     roman_character_index index;
 
-    /* The value of the next largest character in terms of the current one */
-    int value_of_next_largest_char = 0;
-    int quotient = 0;
+    int conversion_rate;
+    int quotient;
 
     for (index = RCI_I; index < RCI_END; index++) {
-        value_of_next_largest_char = value_of_next_numeral_in_terms_of_numeral_at(index);
+        conversion_rate = value_of_next_numeral_in_terms_of_numeral_at(index);
 
-        quotient = (*character_counts_ptr)[index]
-            / value_of_next_largest_char;
-        (*character_counts_ptr)[index] = (*character_counts_ptr)[index]
-            % value_of_next_largest_char;
+        quotient = (*character_counts_ptr)[index] / conversion_rate;
+        (*character_counts_ptr)[index] = (*character_counts_ptr)[index] % conversion_rate;
 
         (*character_counts_ptr)[index + 1] += quotient;
     }
