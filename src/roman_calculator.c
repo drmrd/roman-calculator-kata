@@ -4,9 +4,9 @@
 #include <string.h>
 
 static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
+typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_character_index;
 
-static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
-                                               int **symbol_counts_ptr);
+static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral, int **symbol_counts_ptr);
 static void compute_carryovers(int **symbol_counts_ptr);
 static char *character_counts_to_string(const int *character_counts);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
@@ -34,11 +34,12 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
  */
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **character_counts_ptr) {
-    int i, j;
-    for (i = 0; i < strlen(roman_numeral); i++) {
-        for (j = 0; j < 7; j++) {
-            if (roman_numeral[i] == roman_characters[j]) {
-                (*character_counts_ptr)[j]++;
+    int offset;
+    roman_character_index index;
+    for (offset = 0; offset < strlen(roman_numeral); offset++) {
+        for (index = RCI_I; index < RCI_END; index++) {
+            if (roman_numeral[offset] == roman_characters[index]) {
+                (*character_counts_ptr)[index]++;
             }
         }
     }
@@ -95,6 +96,8 @@ static char *character_counts_to_string(const int *character_counts) {
 
     char *current_position = roman_numeral;
     int current_character_count;
+
+    int i;
     for (i = 6; i > -1; i--) {
         current_character_count = character_counts[i];
 
