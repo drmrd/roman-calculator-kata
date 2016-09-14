@@ -10,6 +10,7 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral, int **
 static void compute_carryovers(int **symbol_counts_ptr);
 static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index);
 static char *character_counts_to_string(const int *character_counts);
+static void insert_subtractive_form(char **location, roman_character_index index, int quantity);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
 static int array_sum(const int *array);
 
@@ -105,12 +106,24 @@ static char *character_counts_to_string(const int *character_counts) {
             memset(current_position, roman_characters[index], current_character_count);
             current_position += current_character_count;
         } else {
-            *current_position++ = roman_characters[index];
-            *current_position++ = roman_characters[(int) index + 1 + (current_character_count % 2)];
+            insert_subtractive_form(&current_position, index, current_character_count);
         }
     }
 
     return result;
+}
+
+static void insert_subtractive_form(char **location, roman_character_index index, int quantity) {
+
+    roman_character_index index_of_larger_character = index + 1;
+    if (quantity > 4) {
+        index_of_larger_character++;
+    }
+
+    (*location)[0] = roman_characters[index];
+    (*location)[1] = roman_characters[index_of_larger_character];
+
+    *location += 2;
 }
 
 static int array_sum(const int *array) {
