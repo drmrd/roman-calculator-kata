@@ -10,6 +10,7 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
 static void compute_carryovers(int **symbol_counts_ptr);
 static char *character_counts_to_string(const int *character_counts);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
+static int array_sum(const int *array);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
@@ -89,13 +90,8 @@ static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) 
  * passed character_counts array.
  */
 static char *character_counts_to_string(const int *character_counts) {
-    int numeral_length = 1;
-    int i;
-    for (i = 0; i < 7; i++) {
-        numeral_length += character_counts[i];
-    }
 
-    char *roman_numeral = calloc(numeral_length, sizeof(char));
+    char *roman_numeral = calloc(array_sum(character_counts) + 1, sizeof(char));
 
     char *current_position = roman_numeral;
     int current_character_count;
@@ -112,4 +108,13 @@ static char *character_counts_to_string(const int *character_counts) {
     }
 
     return roman_numeral;
+}
+
+static int array_sum(const int *array) {
+    int sum = 0;
+    int index;
+    for (index = 0; index < 7; index++) {
+        sum += array[index];
+    }
+    return sum;
 }
