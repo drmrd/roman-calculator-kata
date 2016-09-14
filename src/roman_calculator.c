@@ -8,7 +8,7 @@ static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **symbol_counts_ptr);
 static void compute_carryovers(int **symbol_counts_ptr);
-static char *character_counts_to_roman_numeral(const int *character_counts);
+static char *character_counts_to_string(const int *character_counts);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
@@ -21,7 +21,7 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
     compute_carryovers(&character_counts);
     flag_where_subtractive_forms_are_needed(&character_counts);
 
-    char *sum = character_counts_to_roman_numeral(character_counts);
+    char *sum = character_counts_to_string(character_counts);
 
     free(character_counts);
     return sum;
@@ -88,7 +88,7 @@ static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) 
  * repetitions of the Roman digits appearing in the string specified by the
  * passed character_counts array.
  */
-static char *character_counts_to_roman_numeral(const int *character_counts) {
+static char *character_counts_to_string(const int *character_counts) {
     int numeral_length = 1;
     int i;
     for (i = 0; i < 7; i++) {
