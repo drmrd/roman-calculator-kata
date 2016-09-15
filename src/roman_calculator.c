@@ -43,8 +43,8 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
                                                   int **character_counts_ptr) {
     char current_char;
     char next_char = *roman_numeral;
-    int offset;
-    int copies_of_current_char;
+    size_t offset;
+    size_t copies_of_current_char;
     for (offset = 0; offset < strlen(roman_numeral); offset++) {
         copies_of_current_char = 1;
 
