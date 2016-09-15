@@ -7,6 +7,7 @@ static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_character_index;
 
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral, int **symbol_counts_ptr);
+static int is_a_subtractive_form(char first_character, char second_character);
 static void compute_carryovers(int **symbol_counts_ptr);
 static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index);
 static char *character_counts_to_string(const int *character_counts);
@@ -40,22 +41,32 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **character_counts_ptr) {
     char current_char;
+    char next_char = *roman_numeral;
     int offset;
+    int copies_of_current_char;
     for (offset = 0; offset < strlen(roman_numeral); offset++) {
-        current_char = roman_numeral[offset];
-        if (get_index(current_char) == RCI_I) {
-            if (roman_numeral[offset + 1] == 'V') {
-                (*character_counts_ptr)[RCI_I] = 4;
-                offset++;
-                continue;
-            } else if (roman_numeral[offset + 1] == 'X') {
-                (*character_counts_ptr)[RCI_I] = 9;
-                offset++;
-                continue;
+        copies_of_current_char = 1;
+
+        current_char = next_char;
+        next_char = roman_numeral[offset + 1];
+
+        if (next_char != '\0' && is_a_subtractive_form(current_char, next_char)) {
+            switch (get_index(next_char) - get_index(current_char)) {
+                case 1:
+                    copies_of_current_char = 4;
+                    break;
+                case 2:
+                    copies_of_current_char = 9;
+                    break;
             }
+            offset++;
         }
-        (*character_counts_ptr)[get_index(current_char)]++;
+        (*character_counts_ptr)[get_index(current_char)] += copies_of_current_char;
     }
+}
+
+static int is_a_subtractive_form(char first_character, char second_character) {
+    return get_index(first_character) < get_index(second_character);
 }
 
 static roman_character_index get_index(char roman_character) {

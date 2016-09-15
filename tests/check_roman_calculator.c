@@ -49,6 +49,10 @@ START_TEST(sum_of_IX_and_I_is_X)
     assert_sum_equals("IX", "I", "X");
 END_TEST
 
+START_TEST(sum_of_XC_and_X_is_C)
+    assert_sum_equals("XC", "X", "C");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
@@ -70,6 +74,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_DC_and_CCC_is_CM);
     tcase_add_test(addition_test_case, sum_of_IV_and_I_is_V);
     tcase_add_test(addition_test_case, sum_of_IX_and_I_is_X);
+    tcase_add_test(addition_test_case, sum_of_XC_and_X_is_C);
 
     suite_add_tcase(test_suite, addition_test_case);
 
