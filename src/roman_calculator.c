@@ -41,6 +41,11 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
     int offset;
     roman_character_index index;
     for (offset = 0; offset < strlen(roman_numeral); offset++) {
+        if (roman_numeral[offset] == 'I' && roman_numeral[offset + 1] == 'V') {
+            (*character_counts_ptr)[RCI_I] = 4;
+            offset++;
+            continue;
+        }
         for (index = RCI_I; index < RCI_END; index++) {
             if (roman_numeral[offset] == roman_characters[index]) {
                 (*character_counts_ptr)[index]++;
