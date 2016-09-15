@@ -14,6 +14,7 @@ static int requires_subtractive_notation(roman_character_index index, int charac
 static void insert_subtractive_form(char **location, roman_character_index index, int quantity);
 static void insert_copies_of_character(char **location, roman_character_index index_of_character, int number_of_copies);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
+static roman_character_index get_index(char roman_character);
 static int array_sum(const int *array);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
@@ -38,10 +39,11 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
  */
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                                                int **character_counts_ptr) {
+    char current_char;
     int offset;
-    roman_character_index index;
     for (offset = 0; offset < strlen(roman_numeral); offset++) {
-        if (roman_numeral[offset] == 'I') {
+        current_char = roman_numeral[offset];
+        if (get_index(current_char) == RCI_I) {
             if (roman_numeral[offset + 1] == 'V') {
                 (*character_counts_ptr)[RCI_I] = 4;
                 offset++;
@@ -52,12 +54,17 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
                 continue;
             }
         }
-        for (index = RCI_I; index < RCI_END; index++) {
-            if (roman_numeral[offset] == roman_characters[index]) {
-                (*character_counts_ptr)[index]++;
-            }
-        }
+        (*character_counts_ptr)[get_index(current_char)]++;
     }
+}
+
+static roman_character_index get_index(char roman_character) {
+    roman_character_index index;
+
+    for (index = RCI_I; index < RCI_END; index++) {
+         if (roman_character == roman_characters[index]) break;
+    }
+    return index;
 }
 
 /** Replaces multiple copies of a Roman digit with the next largest one. */
