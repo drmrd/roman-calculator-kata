@@ -79,20 +79,15 @@ static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index cu
  * 'C' (similar for 'L' and 'X' as well as 'V' and 'I').
  */
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) {
-    int i;
-    for (i = 0; i < 6; i += 2) {
-        if ((*character_counts_ptr)[i + 1] == 1 && (*character_counts_ptr)[i] == 4) {
-            (*character_counts_ptr)[i] = 9;
-            (*character_counts_ptr)[i + 1] = 0;
+    roman_character_index index;
+    for (index = RCI_I; index < RCI_END; index += 2) {
+        if ((*character_counts_ptr)[index + 1] == 1 && (*character_counts_ptr)[index] == 4) {
+            (*character_counts_ptr)[index] = 9;
+            (*character_counts_ptr)[index + 1] = 0;
         }
     }
 }
 
-/**
- * Creates a string representation of a Roman numeral with the number of
- * repetitions of the Roman digits appearing in the string specified by the
- * passed character_counts array.
- */
 static char *character_counts_to_string(const int *character_counts) {
 
     char *result = calloc(array_sum(character_counts) + 1, sizeof(char));
