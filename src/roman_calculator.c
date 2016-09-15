@@ -10,7 +10,9 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral, int **
 static void compute_carryovers(int **symbol_counts_ptr);
 static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index);
 static char *character_counts_to_string(const int *character_counts);
+static int requires_subtractive_notation(roman_character_index index, int character_repetitions);
 static void insert_subtractive_form(char **location, roman_character_index index, int quantity);
+static void insert_copies_of_character(char **location, roman_character_index index_of_character, int number_of_copies);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
 static int array_sum(const int *array);
 
@@ -102,19 +104,23 @@ static char *character_counts_to_string(const int *character_counts) {
     for (index = RCI_M; index < RCI_END; index--) {
         current_character_count = character_counts[index];
 
-        if (index == RCI_M || current_character_count < 4) {
-            memset(current_position, roman_characters[index], current_character_count);
-            current_position += current_character_count;
-        } else {
+        if (requires_subtractive_notation(index, current_character_count)) {
             insert_subtractive_form(&current_position, index, current_character_count);
+        } else {
+            insert_copies_of_character(&current_position, index, current_character_count);
         }
     }
 
     return result;
 }
 
-static void insert_subtractive_form(char **location, roman_character_index index, int quantity) {
+static int requires_subtractive_notation(roman_character_index index, int character_repetitions)
+{
+    return index != RCI_M && character_repetitions >= 4;
+}
 
+static void insert_subtractive_form(char **location, roman_character_index index, int quantity)
+{
     roman_character_index index_of_larger_character = index + 1;
     if (quantity > 4) {
         index_of_larger_character++;
@@ -124,6 +130,12 @@ static void insert_subtractive_form(char **location, roman_character_index index
     (*location)[1] = roman_characters[index_of_larger_character];
 
     *location += 2;
+}
+
+static void insert_copies_of_character(char **location, roman_character_index index_of_character, int number_of_copies)
+{
+    memset(*location, roman_characters[index_of_character], number_of_copies);
+    *location += number_of_copies;
 }
 
 static int array_sum(const int *array) {
