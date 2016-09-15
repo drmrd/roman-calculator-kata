@@ -7,6 +7,7 @@ static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_character_index;
 
 static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral, int **symbol_counts_ptr);
+static int relative_roman_character_value(char old_char, char new_char);
 static int is_a_subtractive_form(char first_character, char second_character);
 static void compute_carryovers(int **symbol_counts_ptr);
 static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index);
@@ -51,17 +52,23 @@ static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
         next_char = roman_numeral[offset + 1];
 
         if (next_char != '\0' && is_a_subtractive_form(current_char, next_char)) {
-            switch (get_index(next_char) - get_index(current_char)) {
-                case 1:
-                    copies_of_current_char = 4;
-                    break;
-                case 2:
-                    copies_of_current_char = 9;
-                    break;
-            }
+            copies_of_current_char = relative_roman_character_value(next_char, current_char) - 1;
             offset++;
         }
         (*character_counts_ptr)[get_index(current_char)] += copies_of_current_char;
+    }
+}
+
+static int relative_roman_character_value(char old_char, char new_char) {
+    const int relative_value_of_character_after_new_char = (get_index(new_char) % 2 == 0) ? 5 : 2;
+    switch (get_index(old_char) - get_index(new_char)) {
+        case 1: return relative_value_of_character_after_new_char;
+        case 2: return 10;
+        case 3: return relative_value_of_character_after_new_char * 10;
+        case 4: return 100;
+        case 5: return relative_value_of_character_after_new_char * 100;
+        case 6: return 1000;
+        default: return -1;
     }
 }
 
