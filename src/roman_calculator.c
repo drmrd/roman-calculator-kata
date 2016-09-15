@@ -6,7 +6,7 @@
 static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_character_index;
 
-static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral, int **symbol_counts_ptr);
+static void count_occurrences_of_roman_characters(const char *roman_numeral, int **symbol_counts_ptr);
 static int relative_roman_character_value(char old_char, char new_char);
 static int is_a_subtractive_form(char first_character, char second_character);
 static void compute_carryovers(int **symbol_counts_ptr);
@@ -23,8 +23,8 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 {
     int *character_counts = calloc(7, sizeof(size_t));
 
-    count_occurrences_of_chars_IVXLCDM(summand1, &character_counts);
-    count_occurrences_of_chars_IVXLCDM(summand2, &character_counts);
+    count_occurrences_of_roman_characters(summand1, &character_counts);
+    count_occurrences_of_roman_characters(summand2, &character_counts);
 
     compute_carryovers(&character_counts);
     flag_where_subtractive_forms_are_needed(&character_counts);
@@ -39,8 +39,8 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
  * Count occurrences of the characters I, V, X, L, C, D, and M in the input and
  * add them to the array pointed to by digit_counts_ptr.
  */
-static void count_occurrences_of_chars_IVXLCDM(const char *roman_numeral,
-                                               int **character_counts_ptr) {
+static void count_occurrences_of_roman_characters(const char *roman_numeral,
+                                                  int **character_counts_ptr) {
     char current_char;
     char next_char = *roman_numeral;
     int offset;
