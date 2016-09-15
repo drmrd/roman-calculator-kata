@@ -57,6 +57,16 @@ START_TEST(sum_of_XC_and_X_is_C)
     assert_sum_equals("XC", "X", "C");
 END_TEST
 
+START_TEST(addition_function_correctly_processes_simple_subtractive_forms_in_input)
+    assert_sum_equals("ID", "I", "D");
+    assert_sum_equals("IM", "I", "M");
+
+    assert_sum_equals("VL", "V", "L");
+    assert_sum_equals("VC", "V", "C");
+    assert_sum_equals("VD", "V", "D");
+    assert_sum_equals("VM", "V", "M");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
@@ -80,6 +90,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_IX_and_I_is_X);
     tcase_add_test(addition_test_case, sum_of_IC_and_I_is_C);
     tcase_add_test(addition_test_case, sum_of_XC_and_X_is_C);
+    tcase_add_test(addition_test_case, addition_function_correctly_processes_simple_subtractive_forms_in_input);
 
     suite_add_tcase(test_suite, addition_test_case);
 
