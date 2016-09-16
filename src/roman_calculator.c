@@ -18,7 +18,8 @@ static void insert_subtractive_form(char **location, roman_character_index index
 static void insert_copies_of_character(char **location, roman_character_index index_of_character, int number_of_copies);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
 static roman_character_index get_index(char roman_character);
-static int array_sum(const int *array);
+static int sum_over_array(const int *array);
+static void subtract_arrays(int **array1, int **array2);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
@@ -48,10 +49,7 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
     count_occurrences_of_roman_characters(numeral1, &character_counts);
     count_occurrences_of_roman_characters(numeral2, &numeral2_counts);
 
-    size_t index;
-    for (index = 0; index < 7; index++) {
-        character_counts[index] -= numeral2_counts[index];
-    }
+    subtract_arrays(&character_counts, &numeral2_counts);
 
     char *difference = character_counts_to_string(character_counts);
 
@@ -162,7 +160,7 @@ static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) 
 
 static char *character_counts_to_string(const int *character_counts) {
 
-    char *result = calloc(array_sum(character_counts) + 1, sizeof(char));
+    char *result = calloc(sum_over_array(character_counts) + 1, sizeof(char));
     char *current_position = result;
 
     int current_character_count;
@@ -205,11 +203,18 @@ static void insert_copies_of_character(char **location, roman_character_index in
     *location += number_of_copies;
 }
 
-static int array_sum(const int *array) {
+static int sum_over_array(const int *array) {
     int sum = 0;
     int index;
     for (index = 0; index < 7; index++) {
         sum += array[index];
     }
     return sum;
+}
+
+static void subtract_arrays(int **array1, int **array2) {
+    size_t index;
+    for (index = 0; index < 7; index++) {
+        (*array1)[index] -= (*array2)[index];
+    }
 }
