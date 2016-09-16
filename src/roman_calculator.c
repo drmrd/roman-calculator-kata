@@ -22,7 +22,9 @@ static int array_sum(const int *array);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
-    if (not_a_roman_numeral(summand1)) exit(EXIT_FAILURE);
+    if (not_a_roman_numeral(summand1) || not_a_roman_numeral(summand2)) {
+         exit(EXIT_FAILURE);
+    }
 
     int *character_counts = calloc(7, sizeof(size_t));
 
