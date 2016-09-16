@@ -8,6 +8,7 @@ typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_ch
 
 static int not_a_roman_numeral(const char *input);
 static void count_occurrences_of_roman_characters(const char *roman_numeral, int **symbol_counts_ptr);
+static void remove_negative_character_counts_by_borrowing(int **character_counts);
 static int relative_roman_character_value(char old_char, char new_char);
 static int is_a_subtractive_form(char first_character, char second_character);
 static void compute_carryovers(int **symbol_counts_ptr);
@@ -50,17 +51,33 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
     count_occurrences_of_roman_characters(numeral2, &numeral2_counts);
 
     subtract_arrays(&character_counts, &numeral2_counts);
-
-    if (character_counts[RCI_I] < 0) {
-        character_counts[RCI_I] += relative_roman_character_value('V', 'I');
-        character_counts[RCI_V]--;
-    }
+    remove_negative_character_counts_by_borrowing(&character_counts);
 
     char *difference = character_counts_to_string(character_counts);
 
     free(numeral2_counts);
     free(character_counts);
     return difference;
+}
+
+static void remove_negative_character_counts_by_borrowing(int **character_counts) {
+    int current_count;
+    roman_character_index current, nearest_positive;
+
+    for (current = RCI_M; current < RCI_END; current--) {
+        current_count = (*character_counts)[current];
+
+        if (current_count > 0) {
+            nearest_positive = current;
+        } else if (current_count < 0) {
+            (*character_counts)[current] += relative_roman_character_value(
+                                                roman_characters[nearest_positive],
+                                                roman_characters[current]
+                                            );
+            (*character_counts)[nearest_positive]--;
+            nearest_positive = current;
+        }
+    }
 }
 
 static int not_a_roman_numeral(const char *input) {
