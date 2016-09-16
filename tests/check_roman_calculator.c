@@ -5,7 +5,10 @@
 #include <check.h>
 #include "../src/roman_calculator.h"
 
-static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum);
+static void assert_sum_equals(const char *summand1, const char *summand2,
+                const char *expected_sum);
+static void assert_difference_equals(const char *numeral1, const char *numeral2,
+                const char *expected_difference);
 
 /*
  * Tests for add_roman_numerals
@@ -94,19 +97,24 @@ START_TEST(subtraction_function_accepts_two_strings)
 END_TEST
 
 START_TEST(II_minus_I_is_I)
-    char *difference = subtract_roman_numerals("II", "I");
-    ck_assert_str_eq(difference, "I");
+    assert_difference_equals("II", "I", "I");
 END_TEST
 
 START_TEST(III_minus_I_is_II)
-    char *difference = subtract_roman_numerals("III", "I");
-    ck_assert_str_eq(difference, "II");
+    assert_difference_equals("III", "I", "II");
 END_TEST
 
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
      free(sum);
+}
+
+static void assert_difference_equals(const char *numeral1, const char *numeral2,
+                                     const char *expected_difference)
+{
+     char *difference = subtract_roman_numerals(numeral1, numeral2);
+     ck_assert_str_eq(difference, expected_difference);
 }
 
 Suite *create_calculator_test_suite(void)
