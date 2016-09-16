@@ -51,13 +51,12 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
 
     subtract_arrays(&character_counts, &numeral2_counts);
 
-    char *difference;
-    if (character_counts[0] < 0) {
-        difference = malloc(4);
-        memset(difference, 'I', 3);
-    } else {
-        difference = character_counts_to_string(character_counts);
+    if (character_counts[RCI_I] < 0) {
+        character_counts[RCI_I] += relative_roman_character_value('V', 'I');
+        character_counts[RCI_V]--;
     }
+
+    char *difference = character_counts_to_string(character_counts);
 
     free(numeral2_counts);
     free(character_counts);
