@@ -7,6 +7,10 @@
 
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum);
 
+/*
+ * Tests for add_roman_numerals
+ */
+
 START_TEST(addition_function_accepts_two_strings)
     char *sum = add_roman_numerals("I", "I");
     free(sum);
@@ -81,6 +85,14 @@ START_TEST(empty_addition_input_strings_result_in_failure)
     assert_sum_equals("", "", "");
 END_TEST
 
+/*
+ * Tests for subtract_roman_numerals
+ */
+
+START_TEST(subtraction_function_accepts_two_strings)
+    char *difference = subtract_roman_numerals("II", "I");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
@@ -92,6 +104,7 @@ Suite *create_calculator_test_suite(void)
     Suite *test_suite = suite_create("Roman_Calculator");
 
     TCase *addition_test_case = tcase_create("Addition");
+    TCase *subtraction_test_case = tcase_create("Subtraction");
 
     tcase_add_test(addition_test_case, addition_function_accepts_two_strings);
     tcase_add_test(addition_test_case, sum_of_I_and_I_is_II);
@@ -124,7 +137,10 @@ Suite *create_calculator_test_suite(void)
         EXIT_FAILURE
     );
 
+    tcase_add_test(subtraction_test_case, subtraction_function_accepts_two_strings);
+
     suite_add_tcase(test_suite, addition_test_case);
+    suite_add_tcase(test_suite, subtraction_test_case);
 
     return test_suite;
 }

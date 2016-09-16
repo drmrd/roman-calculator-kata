@@ -40,6 +40,11 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
     return sum;
 }
 
+char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
+{
+    return NULL;
+}
+
 static int not_a_roman_numeral(const char *input) {
     size_t input_length = strlen(input);
     if (input_length == 0) return 1;
