@@ -26,7 +26,7 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
          exit(EXIT_FAILURE);
     }
 
-    int *character_counts = calloc(7, sizeof(size_t));
+    int *character_counts = calloc(7, sizeof(int));
 
     count_occurrences_of_roman_characters(summand1, &character_counts);
     count_occurrences_of_roman_characters(summand2, &character_counts);
