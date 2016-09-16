@@ -75,6 +75,12 @@ START_TEST(add_roman_numerals_exits_with_a_failure_state_when_second_argument_is
     add_roman_numerals("I", "also not a Roman numeral");
 END_TEST
 
+START_TEST(empty_addition_input_strings_result_in_failure)
+    assert_sum_equals("", "I", "I");
+    assert_sum_equals("I", "", "I");
+    assert_sum_equals("", "", "");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
@@ -98,7 +104,10 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_IX_and_I_is_X);
     tcase_add_test(addition_test_case, sum_of_IC_and_I_is_C);
     tcase_add_test(addition_test_case, sum_of_XC_and_X_is_C);
-    tcase_add_test(addition_test_case, addition_function_correctly_processes_simple_subtractive_forms_in_input);
+    tcase_add_test(
+        addition_test_case,
+        addition_function_correctly_processes_simple_subtractive_forms_in_input
+    );
     tcase_add_exit_test(
         addition_test_case,
         add_roman_numerals_exits_with_a_failure_state_when_first_argument_is_malformed,
@@ -107,6 +116,11 @@ Suite *create_calculator_test_suite(void)
     tcase_add_exit_test(
         addition_test_case,
         add_roman_numerals_exits_with_a_failure_state_when_second_argument_is_malformed,
+        EXIT_FAILURE
+    );
+    tcase_add_exit_test(
+        addition_test_case,
+        empty_addition_input_strings_result_in_failure,
         EXIT_FAILURE
     );
 

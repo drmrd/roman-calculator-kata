@@ -41,8 +41,11 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 }
 
 static int not_a_roman_numeral(const char *input) {
+    size_t input_length = strlen(input);
+    if (input_length == 0) return 1;
+
     size_t current_index;
-    for(current_index = 0; current_index < strlen(input); current_index++) {
+    for(current_index = 0; current_index < input_length; current_index++) {
         if (get_index(input[current_index]) == RCI_END) return 1;
     }
     return 0;
