@@ -104,7 +104,9 @@ START_TEST(III_minus_I_is_II)
     assert_difference_equals("III", "I", "II");
 END_TEST
 
-static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
+static void assert_sum_equals(const char *summand1, const char *summand2,
+                              const char *expected_sum)
+{
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
      free(sum);
@@ -124,10 +126,16 @@ Suite *create_calculator_test_suite(void)
     TCase *addition_test_case = tcase_create("Addition");
     TCase *subtraction_test_case = tcase_create("Subtraction");
 
+    /*
+     * Populate addition test case
+     */
     tcase_add_test(addition_test_case, addition_function_accepts_two_strings);
     tcase_add_test(addition_test_case, sum_of_I_and_I_is_II);
     tcase_add_test(addition_test_case, sum_of_II_and_I_is_III);
-    tcase_add_test(addition_test_case, can_carryover_from_a_numeral_to_the_next_greatest_when_adding);
+    tcase_add_test(
+        addition_test_case,
+        can_carryover_from_a_numeral_to_the_next_greatest_when_adding
+    );
     tcase_add_test(addition_test_case, sum_of_II_and_II_is_IV);
     tcase_add_test(addition_test_case, sum_of_XX_and_XX_is_XL);
     tcase_add_test(addition_test_case, sum_of_DC_and_CCC_is_CM);
@@ -155,7 +163,13 @@ Suite *create_calculator_test_suite(void)
         EXIT_FAILURE
     );
 
-    tcase_add_test(subtraction_test_case, subtraction_function_accepts_two_strings);
+    /*
+     * Populate subtraction test case
+     */
+    tcase_add_test(
+        subtraction_test_case,
+        subtraction_function_accepts_two_strings
+    );
     tcase_add_test(subtraction_test_case, II_minus_I_is_I);
     tcase_add_test(subtraction_test_case, III_minus_I_is_II);
 
