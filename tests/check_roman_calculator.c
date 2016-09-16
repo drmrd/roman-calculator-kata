@@ -90,7 +90,7 @@ END_TEST
  */
 
 START_TEST(subtraction_function_accepts_two_strings)
-    char *difference = subtract_roman_numerals("II", "I");
+    subtract_roman_numerals("II", "I");
 END_TEST
 
 START_TEST(II_minus_I_is_I)
