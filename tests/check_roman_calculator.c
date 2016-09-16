@@ -93,6 +93,11 @@ START_TEST(subtraction_function_accepts_two_strings)
     char *difference = subtract_roman_numerals("II", "I");
 END_TEST
 
+START_TEST(II_minus_I_is_I)
+    char *difference = subtract_roman_numerals("II", "I");
+    ck_assert_str_eq(difference, "I");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2, const char *expected_sum) {
      char *sum = add_roman_numerals(summand1, summand2);
      ck_assert_str_eq(sum, expected_sum);
@@ -138,6 +143,7 @@ Suite *create_calculator_test_suite(void)
     );
 
     tcase_add_test(subtraction_test_case, subtraction_function_accepts_two_strings);
+    tcase_add_test(subtraction_test_case, II_minus_I_is_I);
 
     suite_add_tcase(test_suite, addition_test_case);
     suite_add_tcase(test_suite, subtraction_test_case);
