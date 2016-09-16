@@ -42,7 +42,22 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 
 char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
 {
-    return (strcmp(numeral1, "II") == 0) ? "I" : "II";
+    int *character_counts = calloc(7, sizeof(int));
+    int *numeral2_counts = calloc(7, sizeof(int));
+
+    count_occurrences_of_roman_characters(numeral1, &character_counts);
+    count_occurrences_of_roman_characters(numeral2, &numeral2_counts);
+
+    size_t index;
+    for (index = 0; index < 7; index++) {
+        character_counts[index] -= numeral2_counts[index];
+    }
+
+    char *difference = character_counts_to_string(character_counts);
+
+    free(numeral2_counts);
+    free(character_counts);
+    return difference;
 }
 
 static int not_a_roman_numeral(const char *input) {
