@@ -99,8 +99,16 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_IC_and_I_is_C);
     tcase_add_test(addition_test_case, sum_of_XC_and_X_is_C);
     tcase_add_test(addition_test_case, addition_function_correctly_processes_simple_subtractive_forms_in_input);
-    tcase_add_exit_test(addition_test_case, add_roman_numerals_exits_with_a_failure_state_when_first_argument_is_malformed, EXIT_FAILURE);
-    tcase_add_exit_test(addition_test_case, add_roman_numerals_exits_with_a_failure_state_when_second_argument_is_malformed, EXIT_FAILURE);
+    tcase_add_exit_test(
+        addition_test_case,
+        add_roman_numerals_exits_with_a_failure_state_when_first_argument_is_malformed,
+        EXIT_FAILURE
+    );
+    tcase_add_exit_test(
+        addition_test_case,
+        add_roman_numerals_exits_with_a_failure_state_when_second_argument_is_malformed,
+        EXIT_FAILURE
+    );
 
     suite_add_tcase(test_suite, addition_test_case);
 
