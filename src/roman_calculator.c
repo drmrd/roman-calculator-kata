@@ -6,6 +6,7 @@
 static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_character_index;
 
+static int not_a_roman_numeral(const char *input);
 static void count_occurrences_of_roman_characters(const char *roman_numeral, int **symbol_counts_ptr);
 static int relative_roman_character_value(char old_char, char new_char);
 static int is_a_subtractive_form(char first_character, char second_character);
@@ -21,6 +22,8 @@ static int array_sum(const int *array);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
+    if (not_a_roman_numeral(summand1)) exit(EXIT_FAILURE);
+
     int *character_counts = calloc(7, sizeof(size_t));
 
     count_occurrences_of_roman_characters(summand1, &character_counts);
@@ -35,9 +38,17 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
     return sum;
 }
 
+static int not_a_roman_numeral(const char *input) {
+    size_t current_index;
+    for(current_index = 0; current_index < strlen(input); current_index++) {
+        if (get_index(input[current_index]) == RCI_END) return 1;
+    }
+    return 0;
+}
+
 /**
  * Count occurrences of the characters I, V, X, L, C, D, and M in the input and
- * add them to the array pointed to by digit_counts_ptr.
+ * add them to the array pointed to by character_counts_ptr.
  */
 static void count_occurrences_of_roman_characters(const char *roman_numeral,
                                                   int **character_counts_ptr) {
