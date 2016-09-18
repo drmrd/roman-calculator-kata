@@ -125,6 +125,10 @@ START_TEST(X_minus_V_equals_V)
     assert_difference_equals("X", "V", "V");
 END_TEST
 
+START_TEST(L_minus_I_equals_XLIX)
+    assert_difference_equals("L", "I", "XLIX");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2,
                               const char *expected_sum)
 {
@@ -199,6 +203,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(subtraction_test_case, V_minus_III_is_II);
     tcase_add_test(subtraction_test_case, X_minus_I_is_IX);
     tcase_add_test(subtraction_test_case, X_minus_V_equals_V);
+    tcase_add_test(subtraction_test_case, L_minus_I_equals_XLIX);
 
     suite_add_tcase(test_suite, addition_test_case);
     suite_add_tcase(test_suite, subtraction_test_case);

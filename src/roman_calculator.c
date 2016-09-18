@@ -53,6 +53,9 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
     subtract_arrays(&character_counts, &numeral2_counts);
     remove_negative_character_counts_by_borrowing(&character_counts);
 
+    compute_carryovers(&character_counts);
+    flag_where_subtractive_forms_are_needed(&character_counts);
+
     char *difference = character_counts_to_string(character_counts);
 
     free(numeral2_counts);
