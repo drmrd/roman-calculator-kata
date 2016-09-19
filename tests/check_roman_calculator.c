@@ -78,6 +78,9 @@ START_TEST(sum_of_I_and_XLI_is_XLII)
     assert_sum_equals("I", "XLI", "XLII");
 END_TEST
 
+START_TEST(add_roman_numerals_accepts_input_greater_than_3999)
+    assert_sum_equals("MMMM", "MMMMM", "MMMMMMMMM");
+END_TEST
 /*
  * Tests for subtract_roman_numerals
  */
@@ -192,6 +195,10 @@ Suite *create_calculator_test_suite(void)
         EXIT_FAILURE
     );
     tcase_add_test(addition_test_case, sum_of_I_and_XLI_is_XLII);
+    tcase_add_test(
+        addition_test_case,
+        add_roman_numerals_accepts_input_greater_than_3999
+    );
 
     /*
      * Populate subtraction test case
