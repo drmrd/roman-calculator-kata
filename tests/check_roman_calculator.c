@@ -135,6 +135,10 @@ START_TEST(borrowing_is_performed_correctly_when_subtracting_one_roman_char_from
     assert_difference_equals("M", "D", "D");
 END_TEST
 
+START_TEST(subtract_roman_numerals_rejects_non_Roman_numeral_input)
+    subtract_roman_numerals("these are not", "Roman numerals");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2,
                               const char *expected_sum)
 {
@@ -210,6 +214,11 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(
         subtraction_test_case,
         borrowing_is_performed_correctly_when_subtracting_one_roman_char_from_another
+    );
+    tcase_add_exit_test(
+        subtraction_test_case,
+        subtract_roman_numerals_rejects_non_Roman_numeral_input,
+        EXIT_FAILURE
     );
 
     suite_add_tcase(test_suite, addition_test_case);

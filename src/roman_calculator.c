@@ -8,6 +8,12 @@ typedef enum {
     RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END
 } roman_character_index;
 
+/* Input validation */
+static void  validate_input_strings_are_roman_numerals(
+    const char *input1,
+    const char *input2
+);
+
 /* General purpose boolean conditions */
 static int   not_a_roman_numeral(const char *input);
 static int   is_a_subtractive_form(char first_character, char second_character);
@@ -56,9 +62,7 @@ static void  subtract_arrays(int **array1, int **array2);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
-    if (not_a_roman_numeral(summand1) || not_a_roman_numeral(summand2)) {
-        exit(EXIT_FAILURE);
-    }
+    validate_input_strings_are_roman_numerals(summand1, summand2);
 
     int *character_counts = calloc(7, sizeof(int));
 
@@ -76,6 +80,8 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 
 char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
 {
+    validate_input_strings_are_roman_numerals(numeral1, numeral2);
+
     int *character_counts = calloc(7, sizeof(int));
     int *numeral2_counts = calloc(7, sizeof(int));
 
@@ -93,6 +99,14 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
     free(numeral2_counts);
     free(character_counts);
     return difference;
+}
+
+static void validate_input_strings_are_roman_numerals(const char *input1,
+                                                      const char *input2)
+{
+    if (not_a_roman_numeral(input1) || not_a_roman_numeral(input2)) {
+        exit(EXIT_FAILURE);
+    }
 }
 
 static void borrow_to_remove_negative_character_counts(int **character_counts) {
