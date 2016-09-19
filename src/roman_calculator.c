@@ -111,20 +111,24 @@ static void validate_input_strings_are_roman_numerals(const char *input1,
 
 static void borrow_to_remove_negative_character_counts(int **character_counts) {
     int current_count;
-    roman_character_index current, nearest_positive;
-
+    roman_character_index current;
+    roman_character_index nearest_positive = RCI_I;
     for (current = RCI_M; current < RCI_END; current--) {
         current_count = (*character_counts)[current];
 
         if (current_count > 0) {
             nearest_positive = current;
         } else if (current_count < 0) {
-            (*character_counts)[current] += relative_roman_character_value(
-                roman_characters[nearest_positive],
-                roman_characters[current]
-            );
-            (*character_counts)[nearest_positive]--;
-            nearest_positive = current;
+            if (nearest_positive > current) {
+                replace_larger_numeral_with_smaller(character_counts,
+                                                    nearest_positive,
+                                                    current,
+                                                    1);
+                nearest_positive = current;
+            } else if (current % 2 == 1 && (*character_counts)[current - 1] > 4) {
+                (*character_counts)[current - 1] -= 5;
+                (*character_counts)[current]++;
+            }
         }
     }
 }

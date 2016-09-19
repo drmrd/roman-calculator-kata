@@ -143,6 +143,10 @@ START_TEST(subtract_roman_numerals_rejects_non_Roman_numeral_input)
     subtract_roman_numerals("these are not", "Roman numerals");
 END_TEST
 
+START_TEST(IX_minus_V_is_IV)
+    assert_difference_equals("IX", "V", "IV");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2,
                               const char *expected_sum)
 {
@@ -225,6 +229,7 @@ Suite *create_calculator_test_suite(void)
         subtract_roman_numerals_rejects_non_Roman_numeral_input,
         EXIT_FAILURE
     );
+    tcase_add_test(subtraction_test_case, IX_minus_V_is_IV);
 
     suite_add_tcase(test_suite, addition_test_case);
     suite_add_tcase(test_suite, subtraction_test_case);
