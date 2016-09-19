@@ -117,16 +117,28 @@ START_TEST(V_minus_III_is_II)
     assert_difference_equals("V", "III", "II");
 END_TEST
 
-START_TEST(X_minus_I_is_IX)
+START_TEST(borrowing_is_performed_correctly_when_subtracting_one_roman_char_from_another)
+    assert_difference_equals("V", "I", "IV");
     assert_difference_equals("X", "I", "IX");
-END_TEST
-
-START_TEST(X_minus_V_equals_V)
     assert_difference_equals("X", "V", "V");
-END_TEST
-
-START_TEST(L_minus_I_equals_XLIX)
     assert_difference_equals("L", "I", "XLIX");
+    assert_difference_equals("L", "X", "XL");
+    assert_difference_equals("L", "V", "XLV");
+    assert_difference_equals("C", "I", "XCIX");
+    assert_difference_equals("C", "V", "XCV");
+    assert_difference_equals("C", "X", "XC");
+    assert_difference_equals("C", "L", "L");
+    assert_difference_equals("D", "I", "CDXCIX");
+    assert_difference_equals("D", "V", "CDXCV");
+    assert_difference_equals("D", "X", "CDXC");
+    assert_difference_equals("D", "L", "CDL");
+    assert_difference_equals("D", "C", "CD");
+    assert_difference_equals("M", "I", "CMXCIX");
+    assert_difference_equals("M", "V", "CMXCV");
+    assert_difference_equals("M", "X", "CMXC");
+    assert_difference_equals("M", "L", "CML");
+    assert_difference_equals("M", "C", "CM");
+    assert_difference_equals("M", "D", "D");
 END_TEST
 
 static void assert_sum_equals(const char *summand1, const char *summand2,
@@ -201,9 +213,10 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(subtraction_test_case, VI_minus_I_is_V);
     tcase_add_test(subtraction_test_case, V_minus_II_is_III);
     tcase_add_test(subtraction_test_case, V_minus_III_is_II);
-    tcase_add_test(subtraction_test_case, X_minus_I_is_IX);
-    tcase_add_test(subtraction_test_case, X_minus_V_equals_V);
-    tcase_add_test(subtraction_test_case, L_minus_I_equals_XLIX);
+    tcase_add_test(
+        subtraction_test_case,
+        borrowing_is_performed_correctly_when_subtracting_one_roman_char_from_another
+    );
 
     suite_add_tcase(test_suite, addition_test_case);
     suite_add_tcase(test_suite, subtraction_test_case);
