@@ -18,6 +18,7 @@ static int requires_subtractive_notation(roman_character_index index, int charac
 static void insert_subtractive_form(char **location, roman_character_index index, int quantity);
 static void insert_copies_of_character(char **location, roman_character_index index_of_character, int number_of_copies);
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
+static void replace_larger_numeral_with_smaller(int **character_counts_ptr, roman_character_index larger, roman_character_index smaller, int number_to_replace);
 static roman_character_index get_index(char roman_character);
 static int sum_over_array(const int *array);
 static void subtract_arrays(int **array1, int **array2);
@@ -167,6 +168,19 @@ static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index cu
     return (current_index % 2 == 0) ? 5 : 2;
 }
 
+static void replace_larger_numeral_with_smaller(int **character_counts_ptr,
+                                                roman_character_index larger,
+                                                roman_character_index smaller,
+                                                int number_to_replace)
+{
+    int *character_counts = *character_counts_ptr;
+    character_counts[larger] -= number_to_replace;
+    character_counts[smaller] += relative_roman_character_value(
+                                     roman_characters[larger],
+                                     roman_characters[smaller]
+                                 ) * number_to_replace;
+}
+
 /**
  * Indicate a subtractive form is needed to print the Roman numeral with the
  * passed character counts. This is accomplished by replacing character counts
@@ -174,11 +188,15 @@ static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index cu
  * 'C' (similar for 'L' and 'X' as well as 'V' and 'I').
  */
 static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) {
-    roman_character_index index;
-    for (index = RCI_I; index < RCI_END; index += 2) {
-        if ((*character_counts_ptr)[index + 1] == 1 && (*character_counts_ptr)[index] == 4) {
-            (*character_counts_ptr)[index] = 9;
-            (*character_counts_ptr)[index + 1] = 0;
+    roman_character_index current;
+    int *character_counts = *character_counts_ptr;
+
+    /* V, L, & D are never the subtracted part of a form, so we skip them. */
+    for (current = RCI_I; current < RCI_END; current += 2) {
+        if (character_counts[current] == 4) {
+            replace_larger_numeral_with_smaller(&character_counts,
+                                                current + 1, current,
+                                                character_counts[current + 1]);
         }
     }
 }
