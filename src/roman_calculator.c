@@ -132,6 +132,8 @@ static int not_a_roman_numeral(const char *input) {
  */
 static void count_occurrences_of_roman_characters(const char *roman_numeral,
                                                   int **character_counts_ptr) {
+    int *character_counts = *character_counts_ptr;
+
     char current_char;
     char next_char = *roman_numeral;
     size_t offset;
@@ -142,16 +144,21 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
         current_char = next_char;
         next_char = roman_numeral[offset + 1];
 
-        if (next_char != '\0' && is_a_subtractive_form(current_char, next_char)) {
-            copies_of_current_char = relative_roman_character_value(next_char, current_char) - 1;
+        if (next_char != '\0' && is_a_subtractive_form(current_char, next_char))
+        {
+            copies_of_current_char = relative_roman_character_value(
+                next_char,
+                current_char
+            ) - 1;
             offset++;
         }
-        (*character_counts_ptr)[get_index(current_char)] += copies_of_current_char;
+        character_counts[get_index(current_char)] += copies_of_current_char;
     }
 }
 
 static int relative_roman_character_value(char old_char, char new_char) {
-    const int relative_value_of_character_after_new_char = (get_index(new_char) % 2 == 0) ? 5 : 2;
+    const int relative_value_of_character_after_new_char
+        = (get_index(new_char) % 2 == 0) ? 5 : 2;
     switch (get_index(old_char) - get_index(new_char)) {
         case 1: return relative_value_of_character_after_new_char;
         case 2: return 10;
@@ -178,21 +185,22 @@ static roman_character_index get_index(char roman_character) {
 
 /** Replaces multiple copies of a Roman digit with the next largest one. */
 static void compute_carryovers(int **character_counts_ptr) {
-    roman_character_index index;
+    int *character_counts = *character_counts_ptr;
 
     int conversion_rate;
     int quotient;
 
+    roman_character_index index;
     for (index = RCI_I; index < RCI_END; index++) {
         conversion_rate = relative_roman_character_value(
             roman_characters[index + 1],
             roman_characters[index]
         );
 
-        quotient = (*character_counts_ptr)[index] / conversion_rate;
-        (*character_counts_ptr)[index] = (*character_counts_ptr)[index] % conversion_rate;
+        quotient = character_counts[index] / conversion_rate;
+        character_counts[index] = character_counts[index] % conversion_rate;
 
-        (*character_counts_ptr)[index + 1] += quotient;
+        character_counts[index + 1] += quotient;
     }
 }
 
@@ -204,9 +212,9 @@ static void replace_larger_numeral_with_smaller(int **character_counts_ptr,
     int *character_counts = *character_counts_ptr;
     character_counts[larger] -= number_to_replace;
     character_counts[smaller] += relative_roman_character_value(
-                                     roman_characters[larger],
-                                     roman_characters[smaller]
-                                 ) * number_to_replace;
+        roman_characters[larger],
+        roman_characters[smaller]
+    ) * number_to_replace;
 }
 
 /**
@@ -222,9 +230,11 @@ static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) 
     /* V, L, & D are never the subtracted part of a form, so we skip them. */
     for (current = RCI_I; current < RCI_END; current += 2) {
         if (character_counts[current] == 4) {
-            replace_larger_numeral_with_smaller(&character_counts,
-                                                current + 1, current,
-                                                character_counts[current + 1]);
+            replace_larger_numeral_with_smaller(
+                &character_counts,
+                current + 1, current,
+                character_counts[current + 1]
+            );
         }
     }
 }
@@ -241,21 +251,32 @@ static char *character_counts_to_string(const int *character_counts) {
         current_character_count = character_counts[index];
 
         if (requires_subtractive_notation(index, current_character_count)) {
-            insert_subtractive_form(&current_position, index, current_character_count);
+            insert_subtractive_form(
+                &current_position,
+                index,
+                current_character_count
+            );
         } else {
-            insert_copies_of_character(&current_position, index, current_character_count);
+            insert_copies_of_character(
+                &current_position,
+                index,
+                current_character_count
+            );
         }
     }
 
     return result;
 }
 
-static int requires_subtractive_notation(roman_character_index index, int character_repetitions)
+static int requires_subtractive_notation(roman_character_index index,
+                                         int character_repetitions)
 {
     return index != RCI_M && character_repetitions >= 4;
 }
 
-static void insert_subtractive_form(char **location, roman_character_index index, int quantity)
+static void insert_subtractive_form(char **location,
+                                    roman_character_index index,
+                                    int quantity)
 {
     roman_character_index index_of_larger_character = index + 1;
     if (quantity > 4) {
@@ -268,7 +289,9 @@ static void insert_subtractive_form(char **location, roman_character_index index
     *location += 2;
 }
 
-static void insert_copies_of_character(char **location, roman_character_index index_of_character, int number_of_copies)
+static void insert_copies_of_character(char **location,
+                                       roman_character_index index_of_character,
+                                       int number_of_copies)
 {
     memset(*location, roman_characters[index_of_character], number_of_copies);
     *location += number_of_copies;
