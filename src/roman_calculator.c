@@ -4,24 +4,55 @@
 #include <string.h>
 
 static const char roman_characters[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
-typedef enum {RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END} roman_character_index;
+typedef enum {
+    RCI_I, RCI_V, RCI_X, RCI_L, RCI_C, RCI_D, RCI_M, RCI_END
+} roman_character_index;
 
-static int not_a_roman_numeral(const char *input);
-static void count_occurrences_of_roman_characters(const char *roman_numeral, int **symbol_counts_ptr);
-static void remove_negative_character_counts_by_borrowing(int **character_counts);
-static int relative_roman_character_value(char old_char, char new_char);
-static int is_a_subtractive_form(char first_character, char second_character);
-static void compute_carryovers(int **symbol_counts_ptr);
-static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index);
+/* General purpose boolean conditions */
+static int   not_a_roman_numeral(const char *input);
+static int   is_a_subtractive_form(char first_character, char second_character);
+static int   requires_subtractive_notation(
+    roman_character_index index,
+    int character_repetitions
+);
+
+/* Helpers that directly manipulate a character_counts array */
+static void  count_occurrences_of_roman_characters(
+    const char *roman_numeral,
+    int **symbol_counts_ptr
+);
+static void  flag_where_subtractive_forms_are_needed(
+    int **character_counts_ptr
+);
+static int   relative_roman_character_value(char old_char, char new_char);
+static void  compute_carryovers(int **symbol_counts_ptr);
+static void  borrow_to_remove_negative_character_counts(int **character_counts);
+static void  replace_larger_numeral_with_smaller(
+    int **character_counts_ptr,
+    roman_character_index larger,
+    roman_character_index smaller,
+    int number_to_replace
+);
+
+/* Helpers for building result strings */
 static char *character_counts_to_string(const int *character_counts);
-static int requires_subtractive_notation(roman_character_index index, int character_repetitions);
-static void insert_subtractive_form(char **location, roman_character_index index, int quantity);
-static void insert_copies_of_character(char **location, roman_character_index index_of_character, int number_of_copies);
-static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
-static void replace_larger_numeral_with_smaller(int **character_counts_ptr, roman_character_index larger, roman_character_index smaller, int number_to_replace);
+static void  insert_subtractive_form(
+    char **location,
+    roman_character_index index,
+    int quantity
+);
+static void  insert_copies_of_character(
+    char **location,
+    roman_character_index index_of_character,
+    int number_of_copies
+);
+
+/* Working with roman_character_index variables */
 static roman_character_index get_index(char roman_character);
-static int sum_over_array(const int *array);
-static void subtract_arrays(int **array1, int **array2);
+
+/* Array operations */
+static int   sum_over_array(const int *array);
+static void  subtract_arrays(int **array1, int **array2);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
@@ -52,7 +83,7 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
     count_occurrences_of_roman_characters(numeral2, &numeral2_counts);
 
     subtract_arrays(&character_counts, &numeral2_counts);
-    remove_negative_character_counts_by_borrowing(&character_counts);
+    borrow_to_remove_negative_character_counts(&character_counts);
 
     compute_carryovers(&character_counts);
     flag_where_subtractive_forms_are_needed(&character_counts);
@@ -64,7 +95,7 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
     return difference;
 }
 
-static void remove_negative_character_counts_by_borrowing(int **character_counts) {
+static void borrow_to_remove_negative_character_counts(int **character_counts) {
     int current_count;
     roman_character_index current, nearest_positive;
 
@@ -153,19 +184,16 @@ static void compute_carryovers(int **character_counts_ptr) {
     int quotient;
 
     for (index = RCI_I; index < RCI_END; index++) {
-        conversion_rate = value_of_next_numeral_in_terms_of_numeral_at(index);
+        conversion_rate = relative_roman_character_value(
+            roman_characters[index + 1],
+            roman_characters[index]
+        );
 
         quotient = (*character_counts_ptr)[index] / conversion_rate;
         (*character_counts_ptr)[index] = (*character_counts_ptr)[index] % conversion_rate;
 
         (*character_counts_ptr)[index + 1] += quotient;
     }
-}
-
-static int value_of_next_numeral_in_terms_of_numeral_at(roman_character_index current_index) {
-    /* Five copies of I, X, or C should be converted to a single V, L, or D,
-     * while two copies of V, L, or D should be converted to X, C, or M. */
-    return (current_index % 2 == 0) ? 5 : 2;
 }
 
 static void replace_larger_numeral_with_smaller(int **character_counts_ptr,
