@@ -221,7 +221,7 @@ static void compute_carryovers(int **character_counts_ptr) {
     int quotient;
 
     roman_character_index index;
-    for (index = RCI_I; index < RCI_END; index++) {
+    for (index = RCI_I; index < RCI_M; index++) {
         conversion_rate = relative_roman_character_value(
             roman_characters[index + 1],
             roman_characters[index]

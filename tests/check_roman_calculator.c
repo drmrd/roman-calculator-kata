@@ -81,6 +81,11 @@ END_TEST
 START_TEST(add_roman_numerals_accepts_input_greater_than_3999)
     assert_sum_equals("MMMM", "MMMMM", "MMMMMMMMM");
 END_TEST
+
+START_TEST(sum_of_MMD_and_MMD_is_MMMMM)
+    assert_sum_equals("MMD", "MMD", "MMMMM");
+END_TEST
+
 /*
  * Tests for subtract_roman_numerals
  */
@@ -199,6 +204,7 @@ Suite *create_calculator_test_suite(void)
         addition_test_case,
         add_roman_numerals_accepts_input_greater_than_3999
     );
+    tcase_add_test(addition_test_case, sum_of_MMD_and_MMD_is_MMMMM);
 
     /*
      * Populate subtraction test case
