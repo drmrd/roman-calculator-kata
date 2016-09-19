@@ -57,7 +57,7 @@ static void  subtract_arrays(int **array1, int **array2);
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
     if (not_a_roman_numeral(summand1) || not_a_roman_numeral(summand2)) {
-         exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     int *character_counts = calloc(7, sizeof(int));
@@ -106,9 +106,9 @@ static void borrow_to_remove_negative_character_counts(int **character_counts) {
             nearest_positive = current;
         } else if (current_count < 0) {
             (*character_counts)[current] += relative_roman_character_value(
-                                                roman_characters[nearest_positive],
-                                                roman_characters[current]
-                                            );
+                roman_characters[nearest_positive],
+                roman_characters[current]
+            );
             (*character_counts)[nearest_positive]--;
             nearest_positive = current;
         }
@@ -171,7 +171,7 @@ static roman_character_index get_index(char roman_character) {
     roman_character_index index;
 
     for (index = RCI_I; index < RCI_END; index++) {
-         if (roman_character == roman_characters[index]) break;
+        if (roman_character == roman_characters[index]) break;
     }
     return index;
 }
