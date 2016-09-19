@@ -149,13 +149,13 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
     int *character_counts = *character_counts_ptr;
 
     char current_char;
-    char next_char = *roman_numeral;
+    char next_char;
     size_t offset;
     size_t copies_of_current_char;
     for (offset = 0; offset < strlen(roman_numeral); offset++) {
         copies_of_current_char = 1;
 
-        current_char = next_char;
+        current_char = roman_numeral[offset];
         next_char = roman_numeral[offset + 1];
 
         if (next_char != '\0' && is_a_subtractive_form(current_char, next_char))

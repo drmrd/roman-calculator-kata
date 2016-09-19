@@ -88,6 +88,10 @@ START_TEST(empty_addition_input_strings_result_in_failure)
     assert_sum_equals("", "", "");
 END_TEST
 
+START_TEST(sum_of_I_and_XLI_is_XLII)
+    assert_sum_equals("I", "XLI", "XLII");
+END_TEST
+
 /*
  * Tests for subtract_roman_numerals
  */
@@ -198,6 +202,7 @@ Suite *create_calculator_test_suite(void)
         empty_addition_input_strings_result_in_failure,
         EXIT_FAILURE
     );
+    tcase_add_test(addition_test_case, sum_of_I_and_XLI_is_XLII);
 
     /*
      * Populate subtraction test case
