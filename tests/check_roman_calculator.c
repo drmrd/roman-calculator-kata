@@ -56,22 +56,8 @@ START_TEST(sum_of_IX_and_I_is_X)
     assert_sum_equals("IX", "I", "X");
 END_TEST
 
-START_TEST(sum_of_IC_and_I_is_C)
-    assert_sum_equals("IC", "I", "C");
-END_TEST
-
 START_TEST(sum_of_XC_and_X_is_C)
     assert_sum_equals("XC", "X", "C");
-END_TEST
-
-START_TEST(addition_function_correctly_processes_simple_subtractive_forms_in_input)
-    assert_sum_equals("ID", "I", "D");
-    assert_sum_equals("IM", "I", "M");
-
-    assert_sum_equals("VL", "V", "L");
-    assert_sum_equals("VC", "V", "C");
-    assert_sum_equals("VD", "V", "D");
-    assert_sum_equals("VM", "V", "M");
 END_TEST
 
 START_TEST(add_roman_numerals_exits_with_a_failure_state_when_first_argument_is_malformed)
@@ -185,12 +171,7 @@ Suite *create_calculator_test_suite(void)
     tcase_add_test(addition_test_case, sum_of_DC_and_CCC_is_CM);
     tcase_add_test(addition_test_case, sum_of_IV_and_I_is_V);
     tcase_add_test(addition_test_case, sum_of_IX_and_I_is_X);
-    tcase_add_test(addition_test_case, sum_of_IC_and_I_is_C);
     tcase_add_test(addition_test_case, sum_of_XC_and_X_is_C);
-    tcase_add_test(
-        addition_test_case,
-        addition_function_correctly_processes_simple_subtractive_forms_in_input
-    );
     tcase_add_exit_test(
         addition_test_case,
         add_roman_numerals_exits_with_a_failure_state_when_first_argument_is_malformed,
