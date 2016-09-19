@@ -122,22 +122,16 @@ START_TEST(borrowing_is_performed_correctly_when_subtracting_one_roman_char_from
     assert_difference_equals("X", "I", "IX");
     assert_difference_equals("X", "V", "V");
     assert_difference_equals("L", "I", "XLIX");
-    assert_difference_equals("L", "X", "XL");
     assert_difference_equals("L", "V", "XLV");
     assert_difference_equals("C", "I", "XCIX");
     assert_difference_equals("C", "V", "XCV");
-    assert_difference_equals("C", "X", "XC");
     assert_difference_equals("C", "L", "L");
     assert_difference_equals("D", "I", "CDXCIX");
     assert_difference_equals("D", "V", "CDXCV");
-    assert_difference_equals("D", "X", "CDXC");
     assert_difference_equals("D", "L", "CDL");
-    assert_difference_equals("D", "C", "CD");
     assert_difference_equals("M", "I", "CMXCIX");
     assert_difference_equals("M", "V", "CMXCV");
-    assert_difference_equals("M", "X", "CMXC");
     assert_difference_equals("M", "L", "CML");
-    assert_difference_equals("M", "C", "CM");
     assert_difference_equals("M", "D", "D");
 END_TEST
 
