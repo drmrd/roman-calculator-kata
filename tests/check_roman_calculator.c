@@ -145,6 +145,14 @@ START_TEST(XV_minus_IX_equals_VI)
     assert_difference_equals("XV", "IX", "VI");
 END_TEST
 
+START_TEST(subtract_roman_numerals_accepts_input_greater_than_3999)
+    assert_difference_equals("MMMMMMMMM", "MMMMM", "MMMM");
+END_TEST
+
+START_TEST(MMMMM_minus_MMC_equals_MMCM)
+    assert_difference_equals("MMMMM", "MMC", "MMCM");
+END_TEST
+
 static void assert_sum_equals(const char *summand1, const char *summand2,
                               const char *expected_sum)
 {
@@ -229,6 +237,11 @@ Suite *create_calculator_test_suite(void)
     );
     tcase_add_test(subtraction_test_case, IX_minus_V_is_IV);
     tcase_add_test(subtraction_test_case, XV_minus_IX_equals_VI);
+    tcase_add_test(
+        subtraction_test_case,
+        subtract_roman_numerals_accepts_input_greater_than_3999
+    );
+    tcase_add_test(subtraction_test_case, MMMMM_minus_MMC_equals_MMCM);
 
     suite_add_tcase(test_suite, addition_test_case);
     suite_add_tcase(test_suite, subtraction_test_case);
