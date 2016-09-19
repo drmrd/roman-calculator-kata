@@ -16,7 +16,10 @@ static void  validate_input_strings_are_roman_numerals(
 
 /* General purpose boolean conditions */
 static int   not_a_roman_numeral(const char *input);
-static int   is_a_subtractive_form(char first_character, char second_character);
+static int   is_a_subtractive_form(
+    roman_character_index first_index,
+    roman_character_index second_index
+);
 static int   requires_subtractive_notation(
     roman_character_index index,
     int character_repetitions
@@ -152,25 +155,29 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
                                                   int **character_counts_ptr) {
     int *character_counts = *character_counts_ptr;
 
-    char current_char;
-    char next_char;
+    roman_character_index current;
+    roman_character_index next;
     size_t offset;
     size_t copies_of_current_char;
     for (offset = 0; offset < strlen(roman_numeral); offset++) {
         copies_of_current_char = 1;
 
-        current_char = roman_numeral[offset];
-        next_char = roman_numeral[offset + 1];
+        current = get_index(roman_numeral[offset]);
+        next = get_index(roman_numeral[offset + 1]);
 
-        if (next_char != '\0' && is_a_subtractive_form(current_char, next_char))
-        {
-            copies_of_current_char = relative_roman_character_value(
-                next_char,
-                current_char
-            ) - 1;
+        if (is_a_subtractive_form(current, next)) {
+            if (next - current == 2 && next % 2 == 0) {
+                character_counts[next - 1] += 1;
+                copies_of_current_char = 4;
+            } else {
+                copies_of_current_char = relative_roman_character_value(
+                    roman_characters[next],
+                    roman_characters[current]
+                ) - 1;
+            }
             offset++;
         }
-        character_counts[get_index(current_char)] += copies_of_current_char;
+        character_counts[current] += copies_of_current_char;
     }
 }
 
@@ -188,8 +195,13 @@ static int relative_roman_character_value(char old_char, char new_char) {
     }
 }
 
-static int is_a_subtractive_form(char first_character, char second_character) {
-    return get_index(first_character) < get_index(second_character);
+static int is_a_subtractive_form(roman_character_index first_index,
+                                 roman_character_index second_index)
+{
+    int difference = second_index - first_index;
+    return second_index < RCI_END
+        && (difference > 0)
+        && (difference < 3);
 }
 
 static roman_character_index get_index(char roman_character) {
