@@ -113,8 +113,7 @@ static void borrow_to_remove_negative_character_counts(int **character_counts) {
             if (nearest_positive > current) {
                 replace_larger_numeral_with_smaller(character_counts,
                                                     nearest_positive,
-                                                    current,
-                                                    1);
+                                                    current, 1);
                 nearest_positive = current;
             } else if (at_power_of_ten(current)
                        && (*character_counts)[current - 1] > 4) {
@@ -206,10 +205,9 @@ static void compute_carryovers(int **character_counts_ptr) {
 
     roman_character_index index;
     for (index = RCI_I; index < RCI_M; index++) {
-        conversion_rate = relative_roman_character_value(
-            roman_characters[index + 1],
-            roman_characters[index]
-        );
+        conversion_rate
+            = relative_roman_character_value(roman_characters[index + 1],
+                                             roman_characters[index]);
 
         quotient = character_counts[index] / conversion_rate;
         character_counts[index] = character_counts[index] % conversion_rate;
@@ -225,10 +223,10 @@ static void replace_larger_numeral_with_smaller(int **character_counts_ptr,
 {
     int *character_counts = *character_counts_ptr;
     character_counts[larger] -= number_to_replace;
-    character_counts[smaller] += relative_roman_character_value(
-        roman_characters[larger],
-        roman_characters[smaller]
-    ) * number_to_replace;
+    character_counts[smaller]
+        += relative_roman_character_value(roman_characters[larger],
+                                          roman_characters[smaller])
+           * number_to_replace;
 }
 
 void subtractive_form_to_character_counts(roman_character_index index1,
@@ -260,11 +258,9 @@ static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr) 
     /* V, L, & D are never the subtracted part of a form, so we skip them. */
     for (current = RCI_I; current < RCI_END; current += 2) {
         if (character_counts[current] == 4) {
-            replace_larger_numeral_with_smaller(
-                &character_counts,
-                current + 1, current,
-                character_counts[current + 1]
-            );
+            replace_larger_numeral_with_smaller(&character_counts,
+                                                current + 1, current,
+                                                character_counts[current + 1]);
         }
     }
 }
@@ -281,17 +277,11 @@ static char *character_counts_to_string(const int *character_counts) {
         current_character_count = character_counts[index];
 
         if (requires_subtractive_notation(index, current_character_count)) {
-            insert_subtractive_form(
-                &current_position,
-                index,
-                current_character_count
-            );
+            insert_subtractive_form(&current_position, index,
+                                    current_character_count);
         } else {
-            insert_copies_of_character(
-                &current_position,
-                index,
-                current_character_count
-            );
+            insert_copies_of_character(&current_position, index,
+                                       current_character_count);
         }
     }
 
