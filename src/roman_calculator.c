@@ -9,52 +9,36 @@ typedef enum {
 } roman_character_index;
 
 /* Input validation */
-static void  validate_input_strings_are_roman_numerals(
-    const char *input1,
-    const char *input2
-);
+static void  validate_input_strings_are_roman_numerals(const char *input1,
+                                                       const char *input2);
 
 /* General purpose boolean conditions */
+static int   is_a_subtractive_form(roman_character_index index1,
+                                   roman_character_index index2);
 static int   not_a_roman_numeral(const char *input);
-static int   is_a_subtractive_form(
-    roman_character_index first_index,
-    roman_character_index second_index
-);
-static int   requires_subtractive_notation(
-    roman_character_index index,
-    int character_repetitions
-);
+static int   requires_subtractive_notation(roman_character_index index,
+                                           int character_repetitions);
 
 /* Helpers that directly manipulate a character_counts array */
-static void  count_occurrences_of_roman_characters(
-    const char *roman_numeral,
-    int **symbol_counts_ptr
-);
-static void  flag_where_subtractive_forms_are_needed(
-    int **character_counts_ptr
-);
+static void  count_occurrences_of_roman_characters(const char *roman_numeral,
+                                                   int **symbol_counts_ptr);
+static void  flag_where_subtractive_forms_are_needed(int **character_counts_ptr);
 static int   relative_roman_character_value(char old_char, char new_char);
 static void  compute_carryovers(int **symbol_counts_ptr);
 static void  borrow_to_remove_negative_character_counts(int **character_counts);
-static void  replace_larger_numeral_with_smaller(
-    int **character_counts_ptr,
-    roman_character_index larger,
-    roman_character_index smaller,
-    int number_to_replace
-);
+static void  replace_larger_numeral_with_smaller(int **character_counts_ptr,
+                                                 roman_character_index larger,
+                                                 roman_character_index smaller,
+                                                 int number_to_replace);
 
 /* Helpers for building result strings */
 static char *character_counts_to_string(const int *character_counts);
-static void  insert_subtractive_form(
-    char **location,
-    roman_character_index index,
-    int quantity
-);
-static void  insert_copies_of_character(
-    char **location,
-    roman_character_index index_of_character,
-    int number_of_copies
-);
+static void  insert_subtractive_form(char **location,
+                                     roman_character_index index,
+                                     int quantity);
+static void  insert_copies_of_character(char **location,
+                                        roman_character_index index_of_character,
+                                        int number_of_copies);
 
 /* Working with roman_character_index variables */
 static roman_character_index get_index(char roman_character);
