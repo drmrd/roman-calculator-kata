@@ -12,9 +12,9 @@ typedef enum {
 static void  validate_input_strings_are_roman_numerals(const char *input1,
                                                        const char *input2);
 
-/* General purpose boolean conditions */
-static int   is_a_subtractive_form(roman_character_index index1,
-                                   roman_character_index index2);
+/* General purpose predicate functions */
+static int   at_subtractive_form(roman_character_index index1,
+                                 roman_character_index index2);
 static int   not_a_roman_numeral(const char *input);
 static int   requires_subtractive_notation(roman_character_index index,
                                            int character_repetitions);
@@ -149,7 +149,7 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
         current = get_index(roman_numeral[offset]);
         next = get_index(roman_numeral[offset + 1]);
 
-        if (is_a_subtractive_form(current, next)) {
+        if (at_subtractive_form(current, next)) {
             if (next - current == 2 && next % 2 == 0) {
                 character_counts[next - 1] += 1;
                 copies_of_current_char = 4;
@@ -179,8 +179,8 @@ static int relative_roman_character_value(char old_char, char new_char) {
     }
 }
 
-static int is_a_subtractive_form(roman_character_index first_index,
-                                 roman_character_index second_index)
+static int at_subtractive_form(roman_character_index first_index,
+                               roman_character_index second_index)
 {
     int difference = second_index - first_index;
     return second_index < RCI_END
