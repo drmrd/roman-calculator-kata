@@ -31,6 +31,9 @@ static void  replace_larger_numeral_with_smaller(int **character_counts_ptr,
                                                  roman_character_index larger,
                                                  roman_character_index smaller,
                                                  int number_to_replace);
+static void  subtractive_form_to_character_counts(roman_character_index index1,
+                                                  roman_character_index index2,
+                                                  int **character_counts_ptr);
 
 /* Helpers for building result strings */
 static char *character_counts_to_string(const int *character_counts);
@@ -144,26 +147,17 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
     roman_character_index current;
     roman_character_index next;
     size_t offset;
-    size_t copies_of_current_char;
     for (offset = 0; offset < strlen(roman_numeral); offset++) {
-        copies_of_current_char = 1;
-
         current = get_index(roman_numeral[offset]);
         next = get_index(roman_numeral[offset + 1]);
 
         if (at_subtractive_form(current, next)) {
-            if (next - current == 2 && !at_power_of_ten(next)) {
-                character_counts[next - 1] += 1;
-                copies_of_current_char = 4;
-            } else {
-                copies_of_current_char = relative_roman_character_value(
-                    roman_characters[next],
-                    roman_characters[current]
-                ) - 1;
-            }
+            subtractive_form_to_character_counts(current, next,
+                                                 &character_counts);
             offset++;
+        } else {
+            character_counts[current]++;
         }
-        character_counts[current] += copies_of_current_char;
     }
 }
 
@@ -235,6 +229,22 @@ static void replace_larger_numeral_with_smaller(int **character_counts_ptr,
         roman_characters[larger],
         roman_characters[smaller]
     ) * number_to_replace;
+}
+
+void subtractive_form_to_character_counts(roman_character_index index1,
+                                          roman_character_index index2,
+                                          int **character_counts_ptr)
+{
+    int *character_counts = *character_counts_ptr;
+
+    if (!at_power_of_ten(index1) && !at_power_of_ten(index2)) {
+        character_counts[index1 + 1] += 1;
+        character_counts[index1] += 4;
+    } else {
+        character_counts[index1]
+            += relative_roman_character_value(roman_characters[index2],
+                                              roman_characters[index1]) - 1;
+    }
 }
 
 /**
