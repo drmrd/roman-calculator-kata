@@ -46,6 +46,8 @@ static void  insert_copies_of_character(char **location,
 
 /* Working with roman_character_index variables */
 static roman_character_index get_index(char roman_character);
+static roman_character_index get_index_of_first_positive_count(roman_character_index start,
+                                                               int **character_counts_ptr);
 
 /* Array operations */
 static int   sum_over_array(const int *array);
@@ -100,26 +102,19 @@ static void validate_input_strings_are_roman_numerals(const char *input1,
     }
 }
 
-static void borrow_to_remove_negative_character_counts(int **character_counts) {
-    int current_count;
+static void borrow_to_remove_negative_character_counts(int **character_counts_ptr)
+{
+    int *character_counts = *character_counts_ptr;
     roman_character_index current;
-    roman_character_index nearest_positive = RCI_I;
+    roman_character_index first_positive;
     for (current = RCI_M; current < RCI_END; current--) {
-        current_count = (*character_counts)[current];
+        if (character_counts[current] == 0) continue;
 
-        if (current_count > 0) {
-            nearest_positive = current;
-        } else if (current_count < 0) {
-            if (nearest_positive > current) {
-                replace_larger_numeral_with_smaller(character_counts,
-                                                    nearest_positive,
-                                                    current, 1);
-                nearest_positive = current;
-            } else if (at_power_of_ten(current)
-                       && (*character_counts)[current - 1] > 4) {
-                (*character_counts)[current - 1] -= 5;
-                (*character_counts)[current]++;
-            }
+        first_positive = get_index_of_first_positive_count(current,
+                                                           &character_counts);
+        if (first_positive > current) {
+            replace_larger_numeral_with_smaller(&character_counts,
+                                                first_positive, current, 1);
         }
     }
 }
@@ -194,6 +189,17 @@ static roman_character_index get_index(char roman_character) {
         if (roman_character == roman_characters[index]) break;
     }
     return index;
+}
+
+static roman_character_index get_index_of_first_positive_count(roman_character_index start, int **character_counts_ptr)
+{
+    roman_character_index result = start + 1;
+    while (result < RCI_END) {
+        if ((*character_counts_ptr)[result] > 0) break;
+        result++;
+    }
+    if (result == RCI_END) return RCI_I;
+    return result;
 }
 
 /** Replaces multiple copies of a Roman digit with the next largest one. */
