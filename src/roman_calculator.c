@@ -13,6 +13,7 @@ static void  validate_input_strings_are_roman_numerals(const char *input1,
                                                        const char *input2);
 
 /* General purpose predicate functions */
+static int   at_power_of_ten(roman_character_index index);
 static int   at_subtractive_form(roman_character_index index1,
                                  roman_character_index index2);
 static int   not_a_roman_numeral(const char *input);
@@ -112,7 +113,8 @@ static void borrow_to_remove_negative_character_counts(int **character_counts) {
                                                     current,
                                                     1);
                 nearest_positive = current;
-            } else if (current % 2 == 1 && (*character_counts)[current - 1] > 4) {
+            } else if (at_power_of_ten(current)
+                       && (*character_counts)[current - 1] > 4) {
                 (*character_counts)[current - 1] -= 5;
                 (*character_counts)[current]++;
             }
@@ -150,7 +152,7 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
         next = get_index(roman_numeral[offset + 1]);
 
         if (at_subtractive_form(current, next)) {
-            if (next - current == 2 && next % 2 == 0) {
+            if (next - current == 2 && !at_power_of_ten(next)) {
                 character_counts[next - 1] += 1;
                 copies_of_current_char = 4;
             } else {
@@ -167,7 +169,7 @@ static void count_occurrences_of_roman_characters(const char *roman_numeral,
 
 static int relative_roman_character_value(char old_char, char new_char) {
     const int relative_value_of_character_after_new_char
-        = (get_index(new_char) % 2 == 0) ? 5 : 2;
+        = (at_power_of_ten(get_index(new_char))) ? 2 : 5;
     switch (get_index(old_char) - get_index(new_char)) {
         case 1: return relative_value_of_character_after_new_char;
         case 2: return 10;
@@ -177,6 +179,10 @@ static int relative_roman_character_value(char old_char, char new_char) {
         case 6: return 1000;
         default: return -1;
     }
+}
+
+static int at_power_of_ten(roman_character_index index) {
+    return index % 2 == 1;
 }
 
 static int at_subtractive_form(roman_character_index first_index,
