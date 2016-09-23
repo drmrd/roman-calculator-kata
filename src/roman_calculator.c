@@ -257,8 +257,7 @@ static void insert_copies_of_character(char **location, rc_index character_index
     *location += number_of_copies;
 }
 
-static void insert_subtractive_form(char **location,
-                                    rc_index index,
+static void insert_subtractive_form(char **location, rc_index index,
                                     int quantity)
 {
     rc_index index_of_larger_character = index + 1;
