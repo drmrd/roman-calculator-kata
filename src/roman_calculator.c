@@ -9,8 +9,7 @@ typedef enum {
 } rc_index;
 
 /* Input validation */
-static void  validate_input_strings_are_roman_numerals(const char *input1,
-                                                       const char *input2);
+static void  validate_input_strings(const char *input1, const char *input2);
 
 /* Helpers that directly manipulate a character_counts array */
 static void  count_occurrences_of_roman_characters(const char *roman_numeral,
@@ -56,7 +55,7 @@ static void  subtract_arrays(int **array1, int **array2);
 
 char *add_roman_numerals(const char *summand1, const char *summand2)
 {
-    validate_input_strings_are_roman_numerals(summand1, summand2);
+    validate_input_strings(summand1, summand2);
 
     int *character_counts = calloc(7, sizeof(int));
 
@@ -74,7 +73,7 @@ char *add_roman_numerals(const char *summand1, const char *summand2)
 
 char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
 {
-    validate_input_strings_are_roman_numerals(numeral1, numeral2);
+    validate_input_strings(numeral1, numeral2);
 
     int *character_counts = calloc(7, sizeof(int));
     int *numeral2_counts = calloc(7, sizeof(int));
@@ -99,8 +98,7 @@ char *subtract_roman_numerals(const char *numeral1, const char *numeral2)
  * Input validation
  */
 
-static void validate_input_strings_are_roman_numerals(const char *input1,
-                                                      const char *input2)
+static void validate_input_strings(const char *input1, const char *input2)
 {
     if (not_a_roman_numeral(input1) || not_a_roman_numeral(input2)) {
         exit(EXIT_FAILURE);
