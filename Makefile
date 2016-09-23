@@ -1,4 +1,5 @@
-CFLAGS=-g -Wall -Wextra -std=c89
+CFLAGS=		-g -Wall -Wextra -std=c89
+PREFIX?=	usr/local
 
 all: build/roman_calculator.o build/libroman_calculator.a
 
@@ -27,3 +28,8 @@ check: all
 clean:
 	rm -rf build/
 	rm -f tests/check_roman_calculator.o
+
+install: all
+	install -d $(DESTDIR)/$(PREFIX)/lib/
+	install build/libroman_calculator.a \
+	$(DESTDIR)/$(PREFIX)/lib/
