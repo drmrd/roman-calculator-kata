@@ -142,8 +142,8 @@ static void flag_where_subtractive_forms_are_needed(int **character_counts_ptr)
     rc_index current;
     int *character_counts = *character_counts_ptr;
 
-    /* V, L, & D are never the subtracted part of a form, so we skip them. */
-    for (current = RCI_I; current < RCI_END; current += 2) {
+    /* V, L, D, M are never the subtracted part of a form, so we skip them. */
+    for (current = RCI_I; current < RCI_M; current += 2) {
         if (character_counts[current] == 4) {
             replace_larger_numeral_with_smaller(&character_counts,
                                                 current + 1, current,
@@ -242,7 +242,12 @@ static char *character_counts_to_string(const int *character_counts)
         }
     }
 
-    return result;
+    char *trimmed_result = realloc(result, (strlen(result) + 1) * sizeof(char));
+    if (!trimmed_result) {
+        free(result);
+        return NULL;
+    }
+    return trimmed_result;
 }
 
 static void insert_copies_of_character(char **location, rc_index character_index,
