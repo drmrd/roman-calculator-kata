@@ -83,3 +83,58 @@ the following targets:
     designed to attempt to handle an ambiguous numeral such as `"IVX"`, which
     could be used to denote either 6 = 10 - (5 - 1) or 4 = (10 - 5) - 1. Again,
     however, error handling in the ambiguous cases could easily be added.
+
+# Notes on Unit Testing
+
+Due to time constraints I decided to limit my unit testing in this kata to tests
+that allowed me to reach a finished product. That said, if I was intending to
+maintain this project long term, a more robust set of unit tests including all
+of the following would be. Below I've listed a couple thoughts on how one could
+expand the test framework before doing major refactoring/releasing this code in
+a mission critical setting.
+
+  * Input validation tests for this exercise were my lowest priority, since they
+    aren't really called for explicitly in the prompt, but I at least created a
+    stub function `validate_input_strings` that currently just checks that input
+    strings do not contain (non-terminal) characters other than the seven
+    symbols `'I'`, `'V'`, ..., and `'M'` that are permitted in a valid Roman
+    numeral. This should be expanded with additional tests that verify the input
+    strings are valid representations of Roman numerals (and not, for instance,
+    the ambiguous Roman numerals I mentioned earlier). Of course, to make this
+    library secure we should probably switch to something other than C strings
+    entirely (and, at very least, make a reasonable attempt at checking that
+    input strings are null terminated), but that's a subject unto itself.
+
+  * With our Roman numeral rules, every numeral exceeding 1000 is the
+    concatenation of a string of `'M'` characters followed by a numeral with
+    value less than 1000. Ignoring validating input, one can accordingly be
+    pretty confident in an implementation of the `add_` and
+    `subtract_roman_numerals` functions so long as
+
+      1. the values of `add_` and `subtract_roman_numerals(X, Y)` are correct
+         for Roman numerals `X`, `Y` with values up to 1000, and
+      2. these functions correctly carryover when the input is greater than 1000,
+         supporting prepending arbitrarily many M's to the output.
+         
+    Assuming 1. has been verified, test coverage for point 2. can be reasonably
+    comprehensive with only a handful of tests.  Regarding point 1., a brute
+    force test of the addition function for all valid input pairs representing
+    values at most 1,000 can be achieved in 1,000,000 tests or even 1000 * 1001
+    / 2 = 500500 tests assuming that `add_roman_numerals(X, Y) ==
+    add_roman_numerals(Y, X)` can be verified to our satisfaction through other
+    means.  Such a small amount of computations can be easily tested (perhaps
+    through a less-frequently-run alternative test file/suite) with any modern
+    computer.  Out of curiosity, I brute force tested both functions on my 2008
+    ThinkPad, and (in addition to confirming the algorithms works as intended!)
+    the tests each ran in under 5 seconds.  That number remained below 30
+    seconds for much larger upper bounds on the input values.
+    
+    Because of this one could either replace the vast majority of the tests in
+    our current suites with a brute force method or (better yet) provide a more
+    comprehensive second test file containing a brute force check that could be
+    less frequently.  My preference would be to speed up this test by minimizing
+    redundancy, since it's clear here that the total number of assertions could
+    be reduced from the brute force test by several orders of magnitude without
+    noticeably impacting test coverage. Regardless, I thought it worth pointing
+    out that, thanks to how Roman numerals represent integers, this is one of
+    the unusual moments where a brute force testing suite is tractable.
